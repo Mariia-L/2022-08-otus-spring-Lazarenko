@@ -4,12 +4,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="testReader" class="ru.otus.test.service.TestReaderServiceImpl">
+    <bean id="testReader" class="ru.otus.test.dao.QuestionsDaoImpl">
         <constructor-arg value="questions.csv"/>
+    </bean>
+
+    <bean id="ioService" class="ru.otus.test.service.IOServiceStreams">
+        <constructor-arg type="java.io.PrintStream" value="#{T(System).out}" />
     </bean>
 
     <bean id="testPrinter" class="ru.otus.test.service.TestPrinterServiceImpl">
         <constructor-arg ref="testReader"/>
+        <constructor-arg ref="ioService"/>
     </bean>
 
 </beans>
