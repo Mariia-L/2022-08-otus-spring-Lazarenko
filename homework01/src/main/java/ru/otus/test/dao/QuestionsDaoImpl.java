@@ -4,36 +4,36 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.AllArgsConstructor;
 import ru.otus.test.domain.Question;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
-public class QuestionsDaoImpl implements QuestionsDao
-{
+public class QuestionsDaoImpl implements QuestionsDao {
+
     private final String fileName;
 
     @Override
-    public List<Question> getQuestions() throws IOException
-    {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+    public List<Question> getQuestions(){
 
-        if (inputStream == null)
-        {
-            return Collections.emptyList();
-        }
+        try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
 
-        InputStreamReader reader = new InputStreamReader(inputStream);
+            if (inputStream == null) {
+                return Collections.emptyList();
+            }
 
-        List<Question> test = new CsvToBeanBuilder(reader)
+            InputStreamReader reader = new InputStreamReader(inputStream);
+
+            List<Question> test = new CsvToBeanBuilder(reader)
                     .withType(Question.class)
                     .build()
                     .parse();
 
-        inputStream.close();
+            return test;
+        } catch (Exception exception){
 
-        return test;
+            return Collections.emptyList();
+        }
     }
 }

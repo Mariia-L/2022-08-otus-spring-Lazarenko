@@ -1,6 +1,6 @@
 package ru.otus.test.service;
 
-public interface TestPrinterService
-{
+public interface TestPrinterService {
+
     void printTest();
 }

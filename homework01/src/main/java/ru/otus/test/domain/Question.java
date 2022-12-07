@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Question
-{
+public class Question {
+
     private long id;
     private String question;
     private String answer;

@@ -15,25 +15,25 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestPrinterServiceImplTest
-{
+class TestPrinterServiceImplTest {
+
     private static final String QUESTION = "How are you?";
 
-    QuestionsDao readerService;
+    private QuestionsDao readerService;
     private ByteArrayOutputStream outputStreamCaptor;
     private IOService printStream;
 
     @BeforeEach
-    public void setUp()
-    {
+    public void setUp() {
+
         readerService = Mockito.mock(QuestionsDaoImpl.class);
         outputStreamCaptor = new ByteArrayOutputStream();
         printStream = new IOServiceStreams(new PrintStream(outputStreamCaptor));
     }
 
     @Test
-    public void printEmpty()
-    {
+    public void printEmpty() {
+
         TestPrinterService printerService = new TestPrinterServiceImpl(readerService, printStream);
         printerService.printTest();
 
@@ -41,8 +41,8 @@ class TestPrinterServiceImplTest
     }
 
     @Test
-    public void printList() throws IOException
-    {
+    public void printList() throws IOException {
+
         List<Question> tests = new ArrayList<>(2);
         Question test = new Question();
         test.setId(1);
