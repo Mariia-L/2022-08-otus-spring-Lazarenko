@@ -2,46 +2,46 @@ package ru.otus.test.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import ru.otus.test.dao.QuestionsDao;
-import ru.otus.test.dao.QuestionsDaoImpl;
 import ru.otus.test.domain.Question;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class TestPrinterServiceImplTest {
 
     private static final String QUESTION = "How are you?";
 
-    private QuestionsDao readerService;
-    private ByteArrayOutputStream outputStreamCaptor;
-    private IOService printStream;
+    @Mock
+    private QuestionsDao questionsDao;
+
+    @Mock
+    private IOService ioService;
+
+    @InjectMocks
+    private TestPrinterServiceImpl testPrinterService;
 
     @BeforeEach
     public void setUp() {
 
-        readerService = Mockito.mock(QuestionsDaoImpl.class);
-        outputStreamCaptor = new ByteArrayOutputStream();
-        printStream = new IOServiceStreams(new PrintStream(outputStreamCaptor));
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void printEmpty() {
 
-        TestPrinterService printerService = new TestPrinterServiceImpl(readerService, printStream);
-        printerService.printTest();
-
-        assertEquals("", outputStreamCaptor.toString());
+        Mockito.when(questionsDao.getQuestions()).thenReturn(Collections.emptyList());
+        testPrinterService.printTest();
+        Mockito.verify(ioService, Mockito.never()).outputString(Mockito.any());
     }
 
     @Test
-    public void printList() throws IOException {
+    public void printList(){
 
         List<Question> tests = new ArrayList<>(2);
         Question test = new Question();
@@ -50,11 +50,8 @@ class TestPrinterServiceImplTest {
 
         tests.add(test);
 
-        Mockito.when(readerService.getQuestions()).thenReturn(tests);
-
-        TestPrinterService printerService = new TestPrinterServiceImpl(readerService, printStream);
-        printerService.printTest();
-
-        assertEquals(QUESTION, outputStreamCaptor.toString().trim());
+        Mockito.when(questionsDao.getQuestions()).thenReturn(tests);
+        testPrinterService.printTest();
+        Mockito.verify(ioService).outputString(QUESTION);
     }
 }

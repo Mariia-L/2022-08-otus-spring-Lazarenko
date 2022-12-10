@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="testReader" class="ru.otus.test.dao.QuestionsDaoImpl">
+    <bean id="questionsDao" class="ru.otus.test.dao.QuestionsDaoImpl">
         <constructor-arg value="questions.csv"/>
     </bean>
 
@@ -13,7 +13,7 @@
     </bean>
 
     <bean id="testPrinter" class="ru.otus.test.service.TestPrinterServiceImpl">
-        <constructor-arg ref="testReader"/>
+        <constructor-arg ref="questionsDao"/>
         <constructor-arg ref="ioService"/>
     </bean>
 

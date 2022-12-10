@@ -25,12 +25,11 @@ public class QuestionsDaoImpl implements QuestionsDao {
 
             InputStreamReader reader = new InputStreamReader(inputStream);
 
-            List<Question> test = new CsvToBeanBuilder(reader)
+            return new CsvToBeanBuilder<Question>(reader)
                     .withType(Question.class)
                     .build()
                     .parse();
 
-            return test;
         } catch (Exception exception){
 
             return Collections.emptyList();

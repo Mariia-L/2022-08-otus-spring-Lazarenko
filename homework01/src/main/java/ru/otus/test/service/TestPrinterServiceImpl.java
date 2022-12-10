@@ -7,13 +7,13 @@ import ru.otus.test.domain.Question;
 @AllArgsConstructor
 public class TestPrinterServiceImpl implements TestPrinterService {
 
-    private final QuestionsDao testReaderService;
+    private final QuestionsDao questionsDao;
     private final IOService ioService;
 
     @Override
     public void printTest() {
 
-        for (Question test : testReaderService.getQuestions()) {
+        for (Question test : questionsDao.getQuestions()) {
 
             ioService.outputString(test.getQuestion());
         }
