@@ -1,0 +1,6 @@
+id,question,answer
+1,What is JVM?,Java Virtual Machine
+2,Which data type is used to create a variable that should store text?,String
+3,Which method can be used to find the length of a string?,length()
+4,Array indexes start with:,0
+5,Which keyword is used to create a class in Java?,class
