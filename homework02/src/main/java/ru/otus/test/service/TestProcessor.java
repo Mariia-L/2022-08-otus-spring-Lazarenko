@@ -1,8 +1,9 @@
 package ru.otus.test.service;
 
+import ru.otus.test.domain.Student;
+import ru.otus.test.domain.StudentResult;
+
 public interface TestProcessor {
 
-    String startTest();
-    int processTest();
-    void printResult(String userName, int score);
+    StudentResult processTest(Student student);
 }

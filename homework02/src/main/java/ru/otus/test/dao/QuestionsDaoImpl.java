@@ -17,9 +17,9 @@ public class QuestionsDaoImpl implements QuestionsDao {
     private final String questionFilePath;
 
     @Override
-    public List<Question> getQuestions(){
+    public List<Question> getQuestions() {
 
-        try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(questionFilePath)) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(questionFilePath)) {
 
             if (inputStream == null) {
                 return Collections.emptyList();

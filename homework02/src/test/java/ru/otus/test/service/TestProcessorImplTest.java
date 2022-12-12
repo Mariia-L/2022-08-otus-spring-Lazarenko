@@ -9,21 +9,21 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.test.dao.QuestionsDao;
 import ru.otus.test.domain.Question;
+import ru.otus.test.domain.Student;
+import ru.otus.test.domain.StudentResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class TestProcessorImplTest {
 
-    private static final String USER_NAME = "Name";
+    private static final String STUDENT_NAME = "Name";
     private static final String QUESTION = "How are you?";
     private static final String OK_ANSWER = "Ok";
-    private static final String RESULT_PATTERN = "%s, ваш результат - %d %s";
 
     @Mock
     private QuestionsDao questionsDao;
@@ -35,31 +35,22 @@ class TestProcessorImplTest {
     private TestProcessorImpl testProcessor;
 
     @Test
-    public void testStartTest() {
-
-        Mockito.when(ioService.inputString()).thenReturn(USER_NAME);
-
-        String userName = testProcessor.startTest();
-
-        Mockito.verify(ioService, times(1)).outputString("Ваше имя и фамилия");
-        Assertions.assertEquals(USER_NAME, userName);
-    }
-
-    @Test
     public void testProcessTestRightAnswer() {
 
         List<Question> questionList = new ArrayList<>(2);
-        Question question1 = new Question();
-        question1.setQuestion(QUESTION);
-        question1.setAnswer(OK_ANSWER);
-        questionList.add(question1);
+        Question question = new Question();
+        question.setQuestion(QUESTION);
+        question.setAnswer(OK_ANSWER);
+        questionList.add(question);
 
         Mockito.when(questionsDao.getQuestions()).thenReturn(questionList);
         Mockito.when(ioService.inputString()).thenReturn(OK_ANSWER);
 
-        int score = testProcessor.processTest();
+        StudentResult studentResult = testProcessor.processTest(new Student(STUDENT_NAME));
 
-        Assertions.assertEquals(1, score);
+        Assertions.assertEquals(1, studentResult.getScore());
+        Assertions.assertEquals(questionList.size(), studentResult.getQuestionNumber());
+        Assertions.assertEquals(STUDENT_NAME, studentResult.getStudent().getName());
     }
 
     @Test
@@ -74,9 +65,11 @@ class TestProcessorImplTest {
         Mockito.when(questionsDao.getQuestions()).thenReturn(questionList);
         Mockito.when(ioService.inputString()).thenReturn("Well");
 
-        int score = testProcessor.processTest();
+        StudentResult studentResult = testProcessor.processTest(new Student(STUDENT_NAME));
 
-        Assertions.assertEquals(0, score);
+        Assertions.assertEquals(0, studentResult.getScore());
+        Assertions.assertEquals(questionList.size(), studentResult.getQuestionNumber());
+        Assertions.assertEquals(STUDENT_NAME, studentResult.getStudent().getName());
     }
 
     @Test
@@ -84,53 +77,9 @@ class TestProcessorImplTest {
 
         Mockito.when(questionsDao.getQuestions()).thenReturn(Collections.emptyList());
 
-        int score = testProcessor.processTest();
+        StudentResult studentResult = testProcessor.processTest(new Student(STUDENT_NAME));
 
         Mockito.verify(ioService, never()).inputString();
-        Assertions.assertEquals(0, score);
-    }
-
-    @Test
-    public void testPrintResultZeroScore() {
-
-        int score = 0;
-
-        testProcessor.printResult(USER_NAME, score);
-
-        Mockito.verify(ioService, times(1))
-                .outputString(String.format(RESULT_PATTERN, USER_NAME, score, "баллов"));
-    }
-
-    @Test
-    public void testPrintResultOneScore() {
-
-        int score = 1;
-
-        testProcessor.printResult(USER_NAME, score);
-
-        Mockito.verify(ioService, times(1))
-                .outputString(String.format(RESULT_PATTERN, USER_NAME, score, "балл"));
-    }
-
-    @Test
-    public void testPrintResultMediumScore() {
-
-        int score = 3;
-
-        testProcessor.printResult(USER_NAME, score);
-
-        Mockito.verify(ioService, times(1))
-                .outputString(String.format(RESULT_PATTERN, USER_NAME, score, "балла"));
-    }
-
-    @Test
-    public void testPrintResultHighScore() {
-
-        int score = 5;
-
-        testProcessor.printResult(USER_NAME, score);
-
-        Mockito.verify(ioService, times(1))
-                .outputString(String.format(RESULT_PATTERN, USER_NAME, score, "баллов"));
+        Assertions.assertNull(studentResult);
     }
 }

@@ -1,9 +1,16 @@
 package ru.otus.test.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.otus.test.dao.QuestionsDao;
 import ru.otus.test.domain.Question;
+import ru.otus.test.domain.Student;
+import ru.otus.test.domain.StudentResult;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,18 +20,18 @@ public class TestProcessorImpl implements TestProcessor {
     private final IOService ioService;
 
     @Override
-    public String startTest() {
-
-        ioService.outputString("Ваше имя и фамилия");
-        return ioService.inputString();
-    }
-
-    @Override
-    public int processTest() {
+    public StudentResult processTest(Student student) {
 
         int score = 0;
+        List<Question> questionList = questionsDao.getQuestions();
 
-        for (Question test : questionsDao.getQuestions()) {
+        if (CollectionUtils.isEmpty(questionList)) {
+
+            ioService.outputString("No available questions. Please, contact administrator or try later");
+            return null;
+        }
+
+        for (Question test : questionList) {
 
             ioService.outputString(test.getQuestion());
             String answer = ioService.inputString();
@@ -35,23 +42,6 @@ public class TestProcessorImpl implements TestProcessor {
             }
         }
 
-        return score;
-    }
-
-    @Override
-    public void printResult(String userName, int score) {
-
-        ioService.outputString(String.format("%s, ваш результат - %d %s", userName, score, getScoreWord(score)));
-    }
-
-    private String getScoreWord(int score) {
-
-        if (score == 1) {
-            return "балл";
-        } else if (score > 1 && score < 5) {
-            return "балла";
-        }
-
-        return "баллов";
+        return new StudentResult(student, score, questionList.size());
     }
 }

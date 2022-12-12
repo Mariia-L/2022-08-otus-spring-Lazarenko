@@ -9,7 +9,7 @@ import java.util.List;
 class QuestionsDaoImplTest {
 
     @Test
-    public void test()
+    public void testSuccess()
     {
         QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("questions.csv");
         List<Question> questionList = questionsDao.getQuestions();
@@ -20,4 +20,11 @@ class QuestionsDaoImplTest {
         Assertions.assertEquals("No", questionList.get(1).getAnswer());
     }
 
+    @Test
+    public void testBrokenFile()
+    {
+        QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("questionsBrokenFile.csv");
+        List<Question> questionList = questionsDao.getQuestions();
+        Assertions.assertEquals(0, questionList.size());
+    }
 }
