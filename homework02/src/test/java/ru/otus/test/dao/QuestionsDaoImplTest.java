@@ -25,6 +25,14 @@ class QuestionsDaoImplTest {
     {
         QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("questionsBrokenFile.csv");
         List<Question> questionList = questionsDao.getQuestions();
+        Assertions.assertEquals(1, questionList.size());
+    }
+
+    @Test
+    public void testNoFile()
+    {
+        QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("111.csv");
+        List<Question> questionList = questionsDao.getQuestions();
         Assertions.assertEquals(0, questionList.size());
     }
 }

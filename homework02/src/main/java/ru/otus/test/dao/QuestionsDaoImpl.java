@@ -28,6 +28,7 @@ public class QuestionsDaoImpl implements QuestionsDao {
             InputStreamReader reader = new InputStreamReader(inputStream);
 
             return new CsvToBeanBuilder<Question>(reader)
+                    .withThrowExceptions(false)
                     .withType(Question.class)
                     .build()
                     .parse();
