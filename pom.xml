@@ -19,6 +19,7 @@
 
     <modules>
         <module>homework01</module>
+        <module>homework02</module>
     </modules>
 
 </project>
