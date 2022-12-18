@@ -2,6 +2,7 @@ package ru.otus.test.dao;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.otus.test.QuestionDaoException;
 import ru.otus.test.domain.Question;
 
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
 class QuestionsDaoImplTest {
 
     @Test
-    public void testSuccess()
-    {
+    public void testSuccess() throws QuestionDaoException {
+
         QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("questions.csv");
         List<Question> questionList = questionsDao.getQuestions();
         Assertions.assertEquals(2, questionList.size());
@@ -21,16 +22,16 @@ class QuestionsDaoImplTest {
     }
 
     @Test
-    public void testBrokenFile()
-    {
+    public void testBrokenFile() throws QuestionDaoException {
+
         QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("questionsBrokenFile.csv");
         List<Question> questionList = questionsDao.getQuestions();
         Assertions.assertEquals(1, questionList.size());
     }
 
     @Test
-    public void testNoFile()
-    {
+    public void testNoFile() throws QuestionDaoException {
+
         QuestionsDaoImpl questionsDao = new QuestionsDaoImpl("111.csv");
         List<Question> questionList = questionsDao.getQuestions();
         Assertions.assertEquals(0, questionList.size());

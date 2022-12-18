@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.otus.test.QuestionDaoException;
 import ru.otus.test.dao.QuestionsDao;
 import ru.otus.test.domain.Question;
 import ru.otus.test.domain.Student;
@@ -35,7 +36,7 @@ class TestProcessorImplTest {
     private TestProcessorImpl testProcessor;
 
     @Test
-    public void testProcessTestRightAnswer() {
+    public void testProcessTestRightAnswer() throws QuestionDaoException {
 
         List<Question> questionList = new ArrayList<>(2);
         Question question = new Question();
@@ -54,7 +55,7 @@ class TestProcessorImplTest {
     }
 
     @Test
-    public void testProcessTestWrongAnswer() {
+    public void testProcessTestWrongAnswer() throws QuestionDaoException {
 
         List<Question> questionList = new ArrayList<>(2);
         Question question1 = new Question();
@@ -73,7 +74,7 @@ class TestProcessorImplTest {
     }
 
     @Test
-    public void testProcessTestNoQuestions() {
+    public void testProcessTestNoQuestions() throws QuestionDaoException {
 
         Mockito.when(questionsDao.getQuestions()).thenReturn(Collections.emptyList());
 

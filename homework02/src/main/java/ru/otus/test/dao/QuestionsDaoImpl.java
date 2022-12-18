@@ -1,8 +1,9 @@
 package ru.otus.test.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import ru.otus.test.QuestionDaoException;
 import ru.otus.test.domain.Question;
 
 import java.io.InputStream;
@@ -11,13 +12,17 @@ import java.util.Collections;
 import java.util.List;
 
 @Repository
-@AllArgsConstructor
 public class QuestionsDaoImpl implements QuestionsDao {
 
     private final String questionFilePath;
 
+    public QuestionsDaoImpl(@Value("${questions.file.path}") String questionFilePath)
+    {
+        this.questionFilePath = questionFilePath;
+    }
+
     @Override
-    public List<Question> getQuestions() {
+    public List<Question> getQuestions() throws QuestionDaoException {
 
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(questionFilePath)) {
 
@@ -35,7 +40,7 @@ public class QuestionsDaoImpl implements QuestionsDao {
 
         } catch (Exception exception) {
 
-            return Collections.emptyList();
+            throw new QuestionDaoException();
         }
     }
 }
